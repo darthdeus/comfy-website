@@ -161,7 +161,7 @@ too high, you can simply cache the result. That being said, we've never
 observed any of this to be a problem in our games.
 
 When you look around the examples in comfy, notably the [sprite
-exampe](https://github.com/darthdeus/comfy/blob/master/comfy/examples/sprite.rs)
+example](https://github.com/darthdeus/comfy/blob/master/comfy/examples/sprite.rs)
 you'll notice that we're actually calling `include_bytes!(...)` like this.
 
 ```rust
