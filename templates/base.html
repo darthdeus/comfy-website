@@ -30,16 +30,26 @@
 
       // Set the checkbox state based on the current theme
       themeSwitch.checked = theme === 'dark';
+      const navbarColor = document.querySelector("#navbarColor")
+      const comfyThemeName = document.querySelector("#comfyThemeName")
 
       themeSwitch.addEventListener('change', function () {
+        navbarColor.classList.remove("bg-dark")
+        navbarColor.removeAttribute("style")
+
         if (themeSwitch.checked) {
+          navbarColor.classList.add("bg-dark")
           document.documentElement.setAttribute('data-bs-theme', 'dark');
           localStorage.setItem('data-bs-theme', 'dark');
+          comfyThemeName.textContent = "Dark Theme"
         } else {
+          navbarColor.style.backgroundColor = "#d6f6fb"
           document.documentElement.setAttribute('data-bs-theme', 'light');
           localStorage.setItem('data-bs-theme', 'light');
+          comfyThemeName.textContent = "Light Theme"
         }
       });
+        themeSwitch.dispatchEvent(new Event("change"))
     });
   </script>
 
@@ -57,43 +67,45 @@
 
 <body>
   <div class="container mb-4">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-        <img src="/comfy.png" alt="logo of the comfy engine" class="bi me-2" width="32" height="32" />
-        <span class="fs-4"><strong>Comfy</strong></span>
-      </a>
+    <div class="sticky-top" id="navbarColor">
+      <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+          <img src="/comfy.png" alt="logo of the comfy engine" class="bi me-2" width="32" height="32" />
+          <span class="fs-4"><strong>Comfy</strong></span>
+        </a>
 
-      <ul class="nav nav-pills">
-        <li class="nav-item">
-          <a href="/book" class="nav-link">Book</a>
-        </li>
-        <li class="nav-item">
-          <a href="/features" class="nav-link">Features</a>
-        </li>
-        <li class="nav-item"><a href="/examples" class="nav-link">Examples</a></li>
-        <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
-        <li class="nav-item">
-          <a href="https://github.com/darthdeus/comfy" class="">
-            <img class="light-github" width="40" height="40" src="/github-mark.svg" alt="Github repo" />
-            <img class="dark-github" width="40" height="40" src="/github-mark-white.svg" alt="Github repo" />
-          </a>
-        </li>
-        <li class="nav-item mx-2">
-          <a href="https://discord.gg/6NGGGTUz7x" class="">
-            <img class="light-discord" height="40" src="/discord-mark-black.png" alt="Discord" />
-            <img class="dark-discord" height="40" src="/discord-mark-white.png" alt="Discord" />
-          </a>
-        </li>
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a href="/book" class="nav-link">Book</a>
+          </li>
+          <li class="nav-item">
+            <a href="/features" class="nav-link">Features</a>
+          </li>
+          <li class="nav-item"><a href="/examples" class="nav-link">Examples</a></li>
+          <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
+          <li class="nav-item">
+            <a href="https://github.com/darthdeus/comfy" class="">
+              <img class="light-github" width="40" height="40" src="/github-mark.svg" alt="Github repo" />
+              <img class="dark-github" width="40" height="40" src="/github-mark-white.svg" alt="Github repo" />
+            </a>
+          </li>
+          <li class="nav-item mx-2">
+            <a href="https://discord.gg/6NGGGTUz7x" class="">
+              <img class="light-discord" height="40" src="/discord-mark-black.png" alt="Discord" />
+              <img class="dark-discord" height="40" src="/discord-mark-white.png" alt="Discord" />
+            </a>
+          </li>
 
-        <li class="ms-3 my-2">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="comfySwitch" style="cursor: pointer">
-            <label class="form-check-label" for="comfySwitch">Dark Theme</label>
-          </div>
-        </li>
-      </ul>
+          <li class="ms-3 my-2">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="comfySwitch" style="cursor: pointer">
+              <label class="form-check-label" for="comfySwitch" id="comfyThemeName">Dark Theme</label>
+            </div>
+          </li>
+        </ul>
 
-    </header>
+      </header>
+    </div>
 
     <section class="section">
       <div class="container">{% block content %} {% endblock %}</div>
@@ -101,6 +113,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
+      </script>
 </body>
 </html>
