@@ -27,19 +27,26 @@
 
     document.addEventListener('DOMContentLoaded', function () {
       const themeSwitch = document.getElementById('comfySwitch');
+      const navbar = document.getElementById("navbar")
 
       // Set the checkbox state based on the current theme
       themeSwitch.checked = theme === 'dark';
 
       themeSwitch.addEventListener('change', function () {
+        navbar.classList.remove("bg-dark")
+        navbar.removeAttribute("style")
+
         if (themeSwitch.checked) {
+          navbar.classList.add("bg-dark")
           document.documentElement.setAttribute('data-bs-theme', 'dark');
           localStorage.setItem('data-bs-theme', 'dark');
         } else {
+          navbar.style.backgroundColor = "#d6f6fb"
           document.documentElement.setAttribute('data-bs-theme', 'light');
           localStorage.setItem('data-bs-theme', 'light');
         }
       });
+      themeSwitch.dispatchEvent(new Event("change"))
     });
   </script>
 
@@ -57,7 +64,7 @@
 
 <body>
   <div class="container mb-4">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <header id="navbar" class="sticky-top d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
         <img src="/comfy.png" alt="logo of the comfy engine" class="bi me-2" width="32" height="32" />
         <span class="fs-4"><strong>Comfy</strong></span>
