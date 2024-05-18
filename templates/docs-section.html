@@ -9,7 +9,9 @@
     <div class="col-md-3">
       {% set root_section_path = section.components | slice(end=2) | concat(with="_index.md") | join(sep="/") %}
       {% set root_section_path = "book/_index.md" %}
-      {{docs_macros::docs_menu(prefix="page-menu", root=get_section(path=root_section_path))}}
+      <div class="sticky-top" style="top: 125px;">
+        {{docs_macros::docs_menu(prefix="page-menu", root=get_section(path=root_section_path))}}
+    </div>
 
     </div>
     <div class="col-md-9">
