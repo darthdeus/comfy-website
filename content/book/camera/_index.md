@@ -37,7 +37,7 @@ points to, or a zoom level, simply as follows:
 ```rust
 let mut camera = main_camera_mut();
 
-camera.position = vec2(5.0, 0.0);
+camera.center = vec2(5.0, 0.0);
 camera.zoom = 50.0;
 ```
 
