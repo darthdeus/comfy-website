@@ -52,8 +52,8 @@ wasm_source = \"/wasm/{{example}}/index.html\"
 \`\`\`
 """
 
-for example in $(ls comfy/examples | grep -e "\.rs$" | grep -v "custom_config" | sed "s/\.rs//"); do
-  RUSTFLAGS=--cfg=web_sys_unstable_apis cargo build --target wasm32-unknown-unknown --release --example "$example" --features blobs,ldtk
+for example in $(ls comfy/examples | grep -e "\.rs$" | grep -v "custom_config" | grep -v "fragment-shader" | grep -v "exr" | grep -v "fullscreen" | grep -v "spatial_benchmark" | sed "s/\.rs//"); do
+  RUSTFLAGS=--cfg=web_sys_unstable_apis cargo build --target wasm32-unknown-unknown --release --example "$example" --features blobs,ldtk,exr
   # cp -r examples/$1/resources target/generated/ || true
   dir="target/generated/$example"
   mkdir -p "$dir"
@@ -73,7 +73,7 @@ END
   # echo "$template" | sed "s/{{example}}/$example/g" | sed "s/{{code}}/$code/" > "$parent_dir/content/examples/$example.md"
 done
 
-for example in $(ls comfy/examples | grep -e "\.rs$" | grep -v "custom_config" | grep -v "exr" | sed "s/\.rs//"); do
+for example in $(ls comfy/examples | grep -e "\.rs$" | grep -v "custom_config" | grep -v "fragment-shader" | grep -v "exr" | grep -v "fullscreen" | grep -v "spatial_benchmark" | sed "s/\.rs//"); do
   COMFY_DEV_TITLE=1 RUST_BACKTRACE=1 cargo run --example $example --features comfy-wgpu/record-pngs,blobs,ldtk
   cp "target/screenshots/$example.png" "$parent_dir/static/screenshots/$example.png"
   cp "target/videos/$example.webm" "$parent_dir/static/videos/$example.webm"
