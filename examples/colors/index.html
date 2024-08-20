@@ -98,7 +98,7 @@
     <section class="section">
       <div class="container">
 <h1 class="title">colors</h1>
-<p class="subtitle"><strong>2023-12-08</strong></p>
+<p class="subtitle"><strong>2024-08-20</strong></p>
 <pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">use </span><span>comfy::*;
 </span><span>
 </span><span>simple_game!(&quot;</span><span style="color:#a3be8c;">Colors</span><span>&quot;, setup, update);
@@ -220,6 +220,7 @@
 </span><span>        </span><span style="color:#b48ead;">let</span><span> pos = pos.</span><span style="color:#96b5b4;">extend</span><span>(</span><span style="color:#d08770;">0.0</span><span>);
 </span><span>
 </span><span>        </span><span style="color:#96b5b4;">draw_mesh</span><span>(Mesh {
+</span><span>            origin: Vec3::</span><span style="color:#d08770;">ZERO</span><span>,
 </span><span>            vertices: vec![
 </span><span>                SpriteVertex::new(pos + </span><span style="color:#96b5b4;">vec3</span><span>(-hw, hh, </span><span style="color:#d08770;">0.0</span><span>), Vec2::</span><span style="color:#d08770;">ZERO</span><span>, left),
 </span><span>                SpriteVertex::new(pos + </span><span style="color:#96b5b4;">vec3</span><span>(-hw, -hh, </span><span style="color:#d08770;">0.0</span><span>), Vec2::</span><span style="color:#d08770;">ZERO</span><span>, left),
@@ -232,6 +233,7 @@
 </span><span>            </span><span style="color:#65737e;">// indices: vec![3, 2, 0, 1, 3, 0].into(),
 </span><span>            texture: None,
 </span><span>            z_index: </span><span style="color:#d08770;">0</span><span>,
+</span><span>            y_sort_offset: </span><span style="color:#d08770;">0.0</span><span>,
 </span><span>        });
 </span><span>    }
 </span><span>

@@ -394,7 +394,7 @@ environment for making games.</p>
 while not exhaustive should cover most of the basics. Notably, the
 <a href="https://github.com/darthdeus/comfy/blob/master/comfy/examples/full_game_loop.rs"><code>full_game_loop</code></a>
 example strips away all of comfy's macros and shows a simple setup for a game
-loop. A good starting point for a &quot;more realistic&quot; game would be the <a href="https://github.com/darthdeus/comfy/blob/master/comfy/examples/physics.rs"><code>physics example</code></a>,
+loop. A good starting point for a "more realistic" game would be the <a href="https://github.com/darthdeus/comfy/blob/master/comfy/examples/physics.rs"><code>physics example</code></a>,
 which although very simple shows some of the core ideas and principles behind
 how we use comfy. That being said, <strong>don't feel limited by what is presented in the examples.
 Comfy is by no means prescriptive in how it should be used.</strong></p>
@@ -464,8 +464,8 @@ example</a>.</p>
 <p>If you don't like this approach, you can build whatever structure you prefer
 for your own game code, but over the past year of using comfy quite heavily
 we've found that having a single context object greatly simplifies writing game
-code, as the developer does not have to worry about &quot;how do I get this other
-thing&quot; I need.</p>
+code, as the developer does not have to worry about "how do I get this other
+thing" I need.</p>
 <p>You may also notice that <code>draw_circle(...)</code> does not actually use <code>c</code>.
 Internally, comfy uses a few global variables for storing state, which includes
 drawing queues, input data, and a few other things. These are collected and
@@ -522,7 +522,7 @@ linker but with <code>share-generics=y</code> on ARM.</p>
 </span><span>[target.aarch64-apple-darwin]
 </span><span style="color:#bf616a;">rustflags </span><span>= [&quot;</span><span style="color:#a3be8c;">-Zshare-generics=y</span><span>&quot;]
 </span></code></pre>
-<p>On Windows you'll have to intsall a few dependencies</p>
+<p>On Windows you'll have to install a few dependencies</p>
 <pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>cargo install -f cargo-binutils
 </span><span>rustup component add llvm-tools-preview
 </span></code></pre>
@@ -531,48 +531,43 @@ linker but with <code>share-generics=y</code> on ARM.</p>
 </span><span style="color:#bf616a;">linker </span><span>= &quot;</span><span style="color:#a3be8c;">rust-lld.exe</span><span>&quot;
 </span><span style="color:#bf616a;">rustflags </span><span>= []
 </span></code></pre>
-<h1 id="optional-uncommenting-the-following-improves-compile-times-but-reduces-the-amount-of-debug-info-to-line-number-tables-only">Optional: Uncommenting the following improves compile times, but reduces the amount of debug info to 'line number tables only'<a class="zola-anchor" href="#optional-uncommenting-the-following-improves-compile-times-but-reduces-the-amount-of-debug-info-to-line-number-tables-only" aria-label="Anchor link for: optional-uncommenting-the-following-improves-compile-times-but-reduces-the-amount-of-debug-info-to-line-number-tables-only">🔗</a></h1>
-<h1 id="in-most-cases-the-gains-are-negligible-but-if-you-are-on-macos-and-have-slow-compile-times-you-should-see-significant-gains">In most cases the gains are negligible, but if you are on macos and have slow compile times you should see significant gains.<a class="zola-anchor" href="#in-most-cases-the-gains-are-negligible-but-if-you-are-on-macos-and-have-slow-compile-times-you-should-see-significant-gains" aria-label="Anchor link for: in-most-cases-the-gains-are-negligible-but-if-you-are-on-macos-and-have-slow-compile-times-you-should-see-significant-gains">🔗</a></h1>
-<p>#[profile.dev]
-#debug = 1</p>
-<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>
+<p>Optional: Uncommenting the following improves compile times, but reduces the amount of debug info to 'line number tables only'
+In most cases the gains are negligible, but if you are on macos and have slow compile times you should see significant gains.</p>
+<pre data-lang="toml" style="background-color:#2b303b;color:#c0c5ce;" class="language-toml "><code class="language-toml" data-lang="toml"><span style="color:#65737e;"># [profile.dev]
+</span><span style="color:#65737e;"># debug = 1
+</span></code></pre>
+<h2 id="simple-game-with-setup">simple game with <code>setup</code><a class="zola-anchor" href="#simple-game-with-setup" aria-label="Anchor link for: simple-game-with-setup">🔗</a></h2>
+<p>Continuing from the previous example, let's say we want to draw a sprite
+instead of a boring circle. This creates a new problem, <em>how do we load
+assets</em>?</p>
+<p>Comfy does not use any kind of complicated asset management solution. We do
+have a parallel asset loader, but let's begin simple with just one sprite.</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">use </span><span>comfy::*;
 </span><span>
-</span><span>## simple game with `setup`
+</span><span>simple_game!(&quot;</span><span style="color:#a3be8c;">Sprite Example</span><span>&quot;, setup, update);
 </span><span>
-</span><span>Continuing from the previous example, let&#39;s say we want to draw a sprite
-</span><span>instead of a boring circle. This creates a new problem, _how do we load
-</span><span>assets_?
-</span><span>
-</span><span>Comfy does not use any kind of complicated asset management solution. We do
-</span><span>have a parallel asset loader, but let&#39;s begin simple with just one sprite.
-</span><span>
-</span><span>```rust
-</span><span>use comfy::*;
-</span><span>
-</span><span>simple_game!(&quot;Sprite Example&quot;, setup, update);
-</span><span>
-</span><span>fn setup(c: &amp;mut EngineContext) {
-</span><span>    c.load_texture_from_bytes(
-</span><span>        // Name of our sprite
-</span><span>        &quot;comfy&quot;,
-</span><span>        // &amp;[u8] with the image data.
-</span><span>        include_bytes!(&quot;assets/comfy.png&quot;)
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">setup</span><span>(</span><span style="color:#bf616a;">c</span><span>: &amp;</span><span style="color:#b48ead;">mut</span><span> EngineContext) {
+</span><span>    c.</span><span style="color:#96b5b4;">load_texture_from_bytes</span><span>(
+</span><span>        </span><span style="color:#65737e;">// Name of our sprite
+</span><span>        &quot;</span><span style="color:#a3be8c;">comfy</span><span>&quot;,
+</span><span>        </span><span style="color:#65737e;">// &amp;[u8] with the image data.
+</span><span>        include_bytes!(&quot;</span><span style="color:#a3be8c;">assets/comfy.png</span><span>&quot;)
 </span><span>    );
 </span><span>}
 </span><span>
-</span><span>fn update(_c: &amp;mut EngineContext) {
-</span><span>    draw_sprite(
-</span><span>        // Sprites are referenced with their string name.
-</span><span>        // Comfy doesn&#39;t use asset handles.
-</span><span>        texture_id(&quot;comfy&quot;),
-</span><span>        // position
-</span><span>        Vec2::ZERO,
-</span><span>        // color tint
-</span><span>        WHITE,
-</span><span>        // z_index
-</span><span>        0,
-</span><span>        // size
-</span><span>        splat(5.0),
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">update</span><span>(</span><span style="color:#bf616a;">_c</span><span>: &amp;</span><span style="color:#b48ead;">mut</span><span> EngineContext) {
+</span><span>    </span><span style="color:#96b5b4;">draw_sprite</span><span>(
+</span><span>        </span><span style="color:#65737e;">// Sprites are referenced with their string name.
+</span><span>        </span><span style="color:#65737e;">// Comfy doesn&#39;t use asset handles.
+</span><span>        </span><span style="color:#96b5b4;">texture_id</span><span>(&quot;</span><span style="color:#a3be8c;">comfy</span><span>&quot;),
+</span><span>        </span><span style="color:#65737e;">// position
+</span><span>        Vec2::</span><span style="color:#d08770;">ZERO</span><span>,
+</span><span>        </span><span style="color:#65737e;">// color tint
+</span><span>        </span><span style="color:#d08770;">WHITE</span><span>,
+</span><span>        </span><span style="color:#65737e;">// z_index
+</span><span>        </span><span style="color:#d08770;">0</span><span>,
+</span><span>        </span><span style="color:#65737e;">// size
+</span><span>        </span><span style="color:#96b5b4;">splat</span><span>(</span><span style="color:#d08770;">5.0</span><span>),
 </span><span>    );
 </span><span>}
 </span></code></pre>
@@ -583,7 +578,7 @@ game is initialized.</p>
 <code>texture_id(...)</code> function is a simple hashing function which turns string
 names into an asset id. Every texture is assigned a unique name to make
 referencing it easier. Many engines use asset handles, but we've found them to be
-annoying to work with when all you want is to say &quot;draw this sprite&quot;.</p>
+annoying to work with when all you want is to say "draw this sprite".</p>
 <p>If you ever run into a scenario where the cost of calling <code>texture_id(...)</code> is
 too high, you can simply cache the result. That being said, we've never
 observed any of this to be a problem in our games.</p>

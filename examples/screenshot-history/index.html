@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <meta name="description" content="Comfy is an ergonomic 2D game engine built in Rust. It's designed to be opinionated, productive, and easy to use.">
+
+  <title>Comfy Engine</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1DRWETLGBR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-1DRWETLGBR');
+  </script>
+
+  <script>
+    const savedTheme = localStorage.getItem('data-bs-theme');
+    const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const theme = savedTheme || preferredTheme;
+    document.documentElement.setAttribute('data-bs-theme', theme);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const themeSwitch = document.getElementById('comfySwitch');
+
+      // Set the checkbox state based on the current theme
+      themeSwitch.checked = theme === 'dark';
+
+      themeSwitch.addEventListener('change', function () {
+        if (themeSwitch.checked) {
+          document.documentElement.setAttribute('data-bs-theme', 'dark');
+          localStorage.setItem('data-bs-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-bs-theme', 'light');
+          localStorage.setItem('data-bs-theme', 'light');
+        }
+      });
+    });
+  </script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;700&display=swap" />
+
+  <!-- <link -->
+  <!--   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" -->
+  <!--   rel="stylesheet" -->
+  <!--   integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" -->
+  <!--   crossorigin="anonymous" -->
+  <!-- /> -->
+
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <div class="container mb-4">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <img src="/comfy.png" alt="logo of the comfy engine" class="bi me-2" width="32" height="32" />
+        <span class="fs-4"><strong>Comfy</strong></span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a href="/book" class="nav-link">Book</a>
+        </li>
+        <li class="nav-item">
+          <a href="/features" class="nav-link">Features</a>
+        </li>
+        <li class="nav-item"><a href="/examples" class="nav-link">Examples</a></li>
+        <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
+        <li class="nav-item">
+          <a href="https://github.com/darthdeus/comfy" class="">
+            <img class="light-github" width="40" height="40" src="/github-mark.svg" alt="Github repo" />
+            <img class="dark-github" width="40" height="40" src="/github-mark-white.svg" alt="Github repo" />
+          </a>
+        </li>
+        <li class="nav-item mx-2">
+          <a href="https://discord.gg/6NGGGTUz7x" class="">
+            <img class="light-discord" height="40" src="/discord-mark-black.png" alt="Discord" />
+            <img class="dark-discord" height="40" src="/discord-mark-white.png" alt="Discord" />
+          </a>
+        </li>
+
+        <li class="ms-3 my-2">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="comfySwitch" style="cursor: pointer">
+            <label class="form-check-label" for="comfySwitch">Dark Theme</label>
+          </div>
+        </li>
+      </ul>
+
+    </header>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">screenshot_history</h1>
+<p class="subtitle"><strong>2024-08-20</strong></p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">use </span><span>comfy::*;
+</span><span style="color:#b48ead;">use </span><span>comfy_core::image::imageops;
+</span><span>
+</span><span>comfy_game!(&quot;</span><span style="color:#a3be8c;">Screenshot History Example</span><span>&quot;, ScreenshotHistoryExample);
+</span><span>
+</span><span style="color:#b48ead;">pub struct </span><span>ScreenshotHistoryExample {
+</span><span>    </span><span style="color:#b48ead;">pub </span><span style="color:#bf616a;">initialized</span><span>: </span><span style="color:#b48ead;">bool</span><span>,
+</span><span>    </span><span style="color:#b48ead;">pub </span><span style="color:#bf616a;">handles</span><span>: Vec&lt;TextureHandle&gt;,
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">impl </span><span>GameLoop </span><span style="color:#b48ead;">for </span><span>ScreenshotHistoryExample {
+</span><span>    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">new</span><span>(</span><span style="color:#bf616a;">_c</span><span>: &amp;</span><span style="color:#b48ead;">mut</span><span> EngineState) -&gt; </span><span style="color:#b48ead;">Self </span><span>{
+</span><span>        </span><span style="color:#b48ead;">Self </span><span>{ initialized: </span><span style="color:#d08770;">false</span><span>, handles: Vec::new() }
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">update</span><span>(&amp;</span><span style="color:#b48ead;">mut </span><span style="color:#bf616a;">self</span><span>, </span><span style="color:#bf616a;">c</span><span>: &amp;</span><span style="color:#b48ead;">mut</span><span> EngineContext) {
+</span><span>        </span><span style="color:#b48ead;">let</span><span> screen_size = </span><span style="color:#96b5b4;">uvec2</span><span>(</span><span style="color:#96b5b4;">screen_width</span><span>() as </span><span style="color:#b48ead;">u32</span><span>, </span><span style="color:#96b5b4;">screen_height</span><span>() as </span><span style="color:#b48ead;">u32</span><span>);
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">if </span><span>!</span><span style="color:#bf616a;">self</span><span>.initialized {
+</span><span>            </span><span style="color:#bf616a;">self</span><span>.initialized = </span><span style="color:#d08770;">true</span><span>;
+</span><span>
+</span><span>            c.renderer.screenshot_params.record_screenshots = </span><span style="color:#d08770;">true</span><span>;
+</span><span>            c.renderer.screenshot_params.screenshot_interval_n = </span><span style="color:#d08770;">10</span><span>;
+</span><span>            c.renderer.screenshot_params.history_length = </span><span style="color:#d08770;">5</span><span>;
+</span><span>
+</span><span>            </span><span style="color:#b48ead;">for</span><span> i in </span><span style="color:#d08770;">0</span><span>..c.renderer.screenshot_params.history_length {
+</span><span>                </span><span style="color:#bf616a;">self</span><span>.handles.</span><span style="color:#96b5b4;">push</span><span>(
+</span><span>                    c.renderer
+</span><span>                        .context
+</span><span>                        .texture_creator
+</span><span>                        .</span><span style="color:#96b5b4;">borrow_mut</span><span>()
+</span><span>                        .</span><span style="color:#96b5b4;">handle_from_size</span><span>(
+</span><span>                            &amp;format!(&quot;</span><span style="color:#a3be8c;">screenshot-</span><span style="color:#d08770;">{i}</span><span>&quot;),
+</span><span>                            screen_size,
+</span><span>                            </span><span style="color:#d08770;">RED</span><span>,
+</span><span>                        ),
+</span><span>                );
+</span><span>            }
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">if </span><span style="color:#96b5b4;">is_key_pressed</span><span>(KeyCode::F) {
+</span><span>            </span><span style="color:#b48ead;">let</span><span> start = Instant::now();
+</span><span>
+</span><span>            </span><span style="color:#96b5b4;">save_screenshots_to_folder</span><span>(
+</span><span>                &quot;</span><span style="color:#a3be8c;">screenshot-history</span><span>&quot;,
+</span><span>                &amp;c.renderer.screenshot_history_buffer,
+</span><span>            );
+</span><span>
+</span><span>            println!(
+</span><span>                &quot;</span><span style="color:#a3be8c;">Saved screenshots to folder &#39;screenshot-history&#39;, time: </span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">ms</span><span>&quot;,
+</span><span>                start.</span><span style="color:#96b5b4;">elapsed</span><span>().</span><span style="color:#96b5b4;">as_millis</span><span>()
+</span><span>            );
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">for </span><span>(screenshot, handle) in
+</span><span>            c.renderer.screenshot_history_buffer.</span><span style="color:#96b5b4;">iter</span><span>().</span><span style="color:#96b5b4;">zip</span><span>(</span><span style="color:#bf616a;">self</span><span>.handles.</span><span style="color:#96b5b4;">iter</span><span>())
+</span><span>        {
+</span><span>            c.renderer.context.texture_creator.</span><span style="color:#96b5b4;">borrow_mut</span><span>().</span><span style="color:#96b5b4;">update_texture</span><span>(
+</span><span>                &amp;imageops::flip_vertical(&amp;screenshot.image),
+</span><span>                *handle,
+</span><span>            );
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">let</span><span> ratio = screen_size.x as </span><span style="color:#b48ead;">f32 </span><span>/ screen_size.y as </span><span style="color:#b48ead;">f32</span><span>;
+</span><span>        </span><span style="color:#b48ead;">let</span><span> w = </span><span style="color:#d08770;">2.0</span><span>;
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">for </span><span>(i, handle) in </span><span style="color:#bf616a;">self</span><span>.handles.</span><span style="color:#96b5b4;">iter</span><span>().</span><span style="color:#96b5b4;">enumerate</span><span>() {
+</span><span>            </span><span style="color:#96b5b4;">draw_sprite</span><span>(
+</span><span>                *handle,
+</span><span>                </span><span style="color:#96b5b4;">vec2</span><span>(i as </span><span style="color:#b48ead;">f32 </span><span>* </span><span style="color:#d08770;">2.0 </span><span>+ </span><span style="color:#d08770;">2.0</span><span>, </span><span style="color:#d08770;">2.0</span><span>),
+</span><span>                </span><span style="color:#d08770;">WHITE</span><span>,
+</span><span>                </span><span style="color:#d08770;">100</span><span>,
+</span><span>                </span><span style="color:#96b5b4;">vec2</span><span>(w, w / ratio),
+</span><span>            );
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#96b5b4;">draw_text_ex</span><span>(
+</span><span>            &quot;</span><span style="color:#a3be8c;">Press F to save screenshots to disk</span><span>&quot;,
+</span><span>            Vec2::</span><span style="color:#d08770;">ZERO</span><span>,
+</span><span>            TextAlign::Center,
+</span><span>            TextParams::default(),
+</span><span>        );
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">let</span><span> time = </span><span style="color:#96b5b4;">get_time</span><span>() as </span><span style="color:#b48ead;">f32</span><span>;
+</span><span>
+</span><span>        </span><span style="color:#96b5b4;">clear_background</span><span>(Color::rgb8(</span><span style="color:#d08770;">13</span><span>, </span><span style="color:#d08770;">2</span><span>, </span><span style="color:#d08770;">8</span><span>));
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">let</span><span> colors = [</span><span style="color:#d08770;">RED</span><span>, </span><span style="color:#d08770;">GREEN</span><span>, </span><span style="color:#d08770;">BLUE</span><span>, </span><span style="color:#d08770;">YELLOW</span><span>, </span><span style="color:#d08770;">CYAN</span><span>];
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">for </span><span>(i, color) in colors.</span><span style="color:#96b5b4;">into_iter</span><span>().</span><span style="color:#96b5b4;">enumerate</span><span>() {
+</span><span>            </span><span style="color:#b48ead;">let</span><span> s = (i + </span><span style="color:#d08770;">1</span><span>) as </span><span style="color:#b48ead;">f32</span><span>;
+</span><span>            </span><span style="color:#b48ead;">let</span><span> t = s * time;
+</span><span>
+</span><span>            </span><span style="color:#b48ead;">let</span><span> z_index = i as </span><span style="color:#b48ead;">i32</span><span>;
+</span><span>
+</span><span>            </span><span style="color:#96b5b4;">draw_circle</span><span>(
+</span><span>                </span><span style="color:#96b5b4;">vec2</span><span>(i as </span><span style="color:#b48ead;">f32 </span><span>* </span><span style="color:#d08770;">2.0 </span><span>+ </span><span style="color:#d08770;">2.0</span><span>, t.</span><span style="color:#96b5b4;">sin</span><span>() - </span><span style="color:#d08770;">2.0</span><span>),
+</span><span>                s * </span><span style="color:#d08770;">0.75</span><span>,
+</span><span>                color,
+</span><span>                z_index,
+</span><span>            );
+</span><span>
+</span><span>            </span><span style="color:#b48ead;">let</span><span> r = </span><span style="color:#96b5b4;">rescale</span><span>(i, </span><span style="color:#d08770;">0</span><span>..colors.</span><span style="color:#96b5b4;">len</span><span>(), </span><span style="color:#d08770;">2</span><span>..</span><span style="color:#d08770;">5</span><span>);
+</span><span>            </span><span style="color:#96b5b4;">draw_arc</span><span>(
+</span><span>                </span><span style="color:#96b5b4;">vec2</span><span>(-s - </span><span style="color:#d08770;">2.0</span><span>, t.</span><span style="color:#96b5b4;">sin</span><span>() - </span><span style="color:#d08770;">2.0</span><span>),
+</span><span>                r,
+</span><span>                </span><span style="color:#d08770;">PI </span><span>- t.</span><span style="color:#96b5b4;">sin</span><span>(),
+</span><span>                </span><span style="color:#d08770;">PI </span><span>- t.</span><span style="color:#96b5b4;">cos</span><span>(),
+</span><span>                color,
+</span><span>                z_index,
+</span><span>            );
+</span><span>
+</span><span>            </span><span style="color:#96b5b4;">draw_arc_outline</span><span>(
+</span><span>                </span><span style="color:#96b5b4;">vec2</span><span>(-</span><span style="color:#d08770;">0.5</span><span>, s - </span><span style="color:#d08770;">0.5</span><span>),
+</span><span>                r,
+</span><span>                s / </span><span style="color:#d08770;">10.0</span><span>,
+</span><span>                </span><span style="color:#d08770;">PI </span><span>/ </span><span style="color:#d08770;">4.0 </span><span>- t.</span><span style="color:#96b5b4;">cos</span><span>().</span><span style="color:#96b5b4;">powf</span><span>(</span><span style="color:#d08770;">2.0</span><span>),
+</span><span>                t.</span><span style="color:#96b5b4;">sin</span><span>().</span><span style="color:#96b5b4;">powf</span><span>(</span><span style="color:#d08770;">2.0</span><span>) + </span><span style="color:#d08770;">PI </span><span>* </span><span style="color:#d08770;">3.0 </span><span>/ </span><span style="color:#d08770;">4.0</span><span>,
+</span><span>                </span><span style="color:#65737e;">// t.cos(),
+</span><span>                color,
+</span><span>                z_index,
+</span><span>            );
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span></code></pre>
+ </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+</body>
+</html>

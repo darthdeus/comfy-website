@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <meta name="description" content="Comfy is an ergonomic 2D game engine built in Rust. It's designed to be opinionated, productive, and easy to use.">
+
+  <title>Comfy Engine</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1DRWETLGBR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-1DRWETLGBR');
+  </script>
+
+  <script>
+    const savedTheme = localStorage.getItem('data-bs-theme');
+    const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const theme = savedTheme || preferredTheme;
+    document.documentElement.setAttribute('data-bs-theme', theme);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const themeSwitch = document.getElementById('comfySwitch');
+
+      // Set the checkbox state based on the current theme
+      themeSwitch.checked = theme === 'dark';
+
+      themeSwitch.addEventListener('change', function () {
+        if (themeSwitch.checked) {
+          document.documentElement.setAttribute('data-bs-theme', 'dark');
+          localStorage.setItem('data-bs-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-bs-theme', 'light');
+          localStorage.setItem('data-bs-theme', 'light');
+        }
+      });
+    });
+  </script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;700&display=swap" />
+
+  <!-- <link -->
+  <!--   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" -->
+  <!--   rel="stylesheet" -->
+  <!--   integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" -->
+  <!--   crossorigin="anonymous" -->
+  <!-- /> -->
+
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <div class="container mb-4">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <img src="/comfy.png" alt="logo of the comfy engine" class="bi me-2" width="32" height="32" />
+        <span class="fs-4"><strong>Comfy</strong></span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a href="/book" class="nav-link">Book</a>
+        </li>
+        <li class="nav-item">
+          <a href="/features" class="nav-link">Features</a>
+        </li>
+        <li class="nav-item"><a href="/examples" class="nav-link">Examples</a></li>
+        <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
+        <li class="nav-item">
+          <a href="https://github.com/darthdeus/comfy" class="">
+            <img class="light-github" width="40" height="40" src="/github-mark.svg" alt="Github repo" />
+            <img class="dark-github" width="40" height="40" src="/github-mark-white.svg" alt="Github repo" />
+          </a>
+        </li>
+        <li class="nav-item mx-2">
+          <a href="https://discord.gg/6NGGGTUz7x" class="">
+            <img class="light-discord" height="40" src="/discord-mark-black.png" alt="Discord" />
+            <img class="dark-discord" height="40" src="/discord-mark-white.png" alt="Discord" />
+          </a>
+        </li>
+
+        <li class="ms-3 my-2">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="comfySwitch" style="cursor: pointer">
+            <label class="form-check-label" for="comfySwitch">Dark Theme</label>
+          </div>
+        </li>
+      </ul>
+
+    </header>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">Release v0.4: Improved Performance (4x), Sprite Culling, Screenshot Capture, and more</h1>
+<p class="subtitle"><strong>2024-05-03</strong></p>
+<p>This release is all about performance improvements, as well as many quality of life features and general capabilities and stability, none of which are particularly flashy, but that we found important in our own game development.</p>
+<p>Comfy's code was never the fastest, but during our playtesting we found that it was starting to become a bottleneck. After
+some non-trivial internal restructuring and optimizations, we're now able to draw 120000 sprites at 60 FPS, which is a <strong>4x improvement</strong> over the previous version. This is a very rough estimate, and many other things were sped up. Those that really care can explore the <a href="https://github.com/darthdeus/comfy-benchmark">comfy benchmark</a>.</p>
+<p>There's also now a built-in sprite culling mechanism which will automatically skip drawing sprites that are outside of the
+camera's viewport. This is enabled by default, and can be toggled at runtime with <code>set_cull_sprites(false)</code>. Games that
+really need performance should perform their own culling and skip calling <code>draw_sprite(...)</code> for things outside of the viewport, as that can be significantly cheaper than Comfy's internal culling, but for games that don't need absolute
+fastest performance, this feature should basically give a free speedup. Note that Comfy can't do the optimal thing out of the box, because it doesn't know how you store your data when you call <code>draw_sprite(...)</code>. If you need a spatial data structure to decide what should be drawn, consider using <a href="https://docs.rs/comfy/latest/comfy/spatial_hash/struct.SpatialHash.html">Comfy's builtin <code>SpatialHash</code></a>. This implementation is far from optimal, but should be more than fast enough for most use cases.</p>
+<p>Another feature that we found useful is the ability to capture screenshots at runtime. This is useful e.g. for marketing purposes. You can set <code>c.renderer.screenshot_params.record_screenshots = true</code> and optionally set <code>screenshot_interval_n</code> and <code>history_length</code> to take a screenshot every <code>n</code> frames, keeping up to <code>history_length</code> screenshots in memory. The whole screenshot buffer can then be saved by calling <code>save_screenshots_to_folder</code>. This is a very rough implementation, and there are many things that could be improved, but as usual, if you need something like this it should be good enough. This feature
+should be considered experimental, as there hasn't really been a lot of testing around it, and only been used during development. If you need something more sophisticated, fork Comfy and do it yourself :) The code should be simple enough to understand for those who know what they need.</p>
+<p>This is also the last release of Comfy that uses <a href="https://wgpu.rs/">wgpu</a>. We already have a work in progress port to <a href="https://macroquad.rs/">Macroquad</a>, which will effectively replace the <code>comfy-wgpu</code> crate.</p>
+<p>There's more than one reason for this migration. Fundamentally, the reason why Comfy had its own renderer is that Macroquad didn't support f16 textures, which are necessary for HDR rendering. <a href="https://github.com/not-fl3/miniquad/commit/04c0c76547dbaac2985bc3263fcef34739a210e6#diff-34b433796cb09381278b47772e25e075eec7fc7115447b0735b3a19aee3f3c4f">This is no longer the case</a>, which means we can just migrate without losing anything. Another benefit is that Macroquad has by far the largest device support in the Rust ecosystem, which means Comfy will run on many more devices than it does now, basically for free. This will also significantly simplify Comfy's codebase, as we should be able to just remove a lot of the current boilerplate for setting up the renderer.</p>
+<p>If all goes well, current release <code>v0.4.0</code> will be the last Comfy release to run on wgpu, with <code>v0.5.0</code> being released one the migration is completed.</p>
+<p>The goal of the whole migration is to affect user code as little as possible. We're not planning on changing any APIs that are related to drawing, and the only thing that will likely be affected are custom shaders.</p>
+<p>Lastly, I should note that we at <a href="https://loglog.games/">LogLog Games</a> are no longer going to be making games in Rust. We recently released our main Comfy game, <a href="https://store.steampowered.com/app/2331980/Unrelaxing_Quacks/">Unrelaxing Quacks</a> on Steam, and published an <a href="https://loglog.games/blog/leaving-rust-gamedev/">excruciatingly detailed article on why we're stopping with Rust for game development</a>. This probably isn't good news for anyone who was hoping to see more games made with Comfy. I do want to say that this doesn't mean Comfy is being abandoned, it's just not going to be actively in use by us.</p>
+<p>The Macroquad migration is already in progress, and has been for some time. By removing wgpu the whole codebase will be simplified by quite a bit, easing on the maintenance burden, and also making it easier for others to contribute. Hopefully it should also reduce the number of graphics issues that users run into. We've definitely had a few with our game.</p>
+<hr />
+<p>A few people have asked what's the reason for Comfy to even exist once it's migrated to Macroquad. Comfy's value was never in just <code>draw_sprite_pro(...)</code>, even though that is probably its most commonly used function. Macroquad is a lower level API than Comfy, and we'll retain some nice quality of life features:</p>
+<ul>
+<li><strong>y-sorting</strong> with <code>set_y_sort(layer, true)</code>.</li>
+<li><strong>z_index</strong> built into all draw calls, allowing users to draw things out of order.</li>
+<li>builtin support for animated sprites</li>
+<li>particle systems</li>
+<li>2d lighting</li>
+<li>egui, ldtk, hecs, and other simple integrations</li>
+<li>more drawing primitives (arc, outlines, etc)</li>
+</ul>
+<p>Note that none of these are particularly groundbreaking, and people should <em>not</em> be discouraged from using Macroquad directly. Comfy exists mainly because we built it on top of Macroquad internally, and it was only opensourced later. The wgpu backend also existed only because we wanted HDR and f16 textures, and Macroquad didn't support that at the time, so we ended up writing it for ourselves.</p>
+<p>Comfy's development has been 100% dogfooded, and every feature that exists is something we used for building one of our games. This means that it's not a groundbreakingly unique engine with flexible features, but it is something that can and has been to ship a full game. Those that want such things can use it, and those that don't value these things can use something else :)</p>
+<hr />
+<p>There are many other changes in this release, following is the full <a href="https://github.com/darthdeus/comfy/blob/master/CHANGELOG.md">CHANGELOG</a>:</p>
+<ul>
+<li>Greatly improved sprite batching performance. [Comfymark] was previously
+running at ~15 FPS drawing 120000 Comfys, and with v0.4 this is now at
+stable 60 FPS on my machine, meaning <strong>at least 4x improvement in sprite
+drawing performance</strong>.</li>
+<li>Added automated screenshot capture mechanism with a fixed history, meaning you can
+now simply set <code>c.renderer.screenshot_params.record_screenshots = true</code> (and optionally
+<code>screenshot_interval_n</code> and <code>history_length</code>) to take a screenshot every <code>n</code> frames,
+keeping up to <code>history_length</code> screenshots in memory. The whole screenshot buffer can
+then be saved by calling <code>save_screenshots_to_folder</code>. Note that just enabling screenshot
+capture has a <em>significant</em> performance overhead (around 20ms per frame in fullhd on my machine), meaning you probably don't want this turned on in release builds. It is however
+very useful for capturing interesting moments in your game e.g. for marketing purposes,
+since you can just play and hit a "save" hotkey a bit later, while still being able to pick
+the perfect screenshot. There is a <a href="https://github.com/darthdeus/comfy/blob/master/comfy/examples/screenshot_history.rs"><code>screenshot_history example</code></a> that showcases this, together with
+how one can copy the screenshots back into a <code>TextureHandle</code> on each frame to display them.
+Note that none of this is optimal, and many things could be improved.</li>
+<li><code>Mesh</code> now has a new <code>origin</code> field. This shouldn't affect most users as
+it's only exposed through <code>draw_mesh</code>.</li>
+<li>Simplified <code>draw_mesh_ex</code> params, now accepting <code>BlendMode</code> instead of
+<code>TextureParams</code> containing only <code>BlendMode</code>. There will be further breaking changes
+around this API in the future, but none that should be complex for users to migrate.</li>
+<li>Greatly improved performance of blood canvas when a large number of writes are perfomed.
+Also greatly improved performance of <code>blood_canvas_blit_at</code> by roughly 5x, depending
+on the blitted sprite.</li>
+<li>Added sprite culling for <code>draw_sprite_pro</code>, <code>Sprite</code> and <code>AnimatedSprite</code>. This is now
+enabled by default and uses the <code>main_camera().viewport</code> to determine if the sprite
+is visible. The check is performed a bit conservatively to avoid issues. If you want to
+disable this for whatever reason, simply <code>set_cull_sprites(false)</code>. This can be toggled
+at runtime as much as you want and won't affect performance. You can get the current value
+with <code>get_sprite_culling</code>, e.g. if you wish to build an inspector window to control this.</li>
+<li>Added <code>enable_child_transforms</code> on <code>GameConfig</code> allowing the user to disable child/parent
+transform update. If you have a lot of entities (10k+) but aren't using child transforms,
+setting this to false may give you extra few percent of free performance. This is enabled
+by default.</li>
+<li>Added <code>flip_x/y</code> and <code>blood_canvas_blit_at_pro</code> which allows blitting sprites with arbitrary
+flipping. Note that this also fixes a long standing bug when in some cases sprites would be
+blitted flipped upside down.</li>
+<li>Fix linear vs sRGB tinting in blood canvas, see <a href="https://github.com/darthdeus/comfy/commit/80a0ee8e81d036aadf3da56c2a6ecb3750306dff">this commit</a> for more details.</li>
+<li>Removed implicitly enabled pause system that would toggle <code>is_paused</code> on <code>EngineContext</code> when
+Esc is pressed. This was never really intended and was an oversight.</li>
+<li>Removed a few components that were never intended to be part of Comfy (e.g. <code>Health</code>, <code>DamagedCallback</code>, <code>Damage</code>).
+Users who need them can re-implement e.g. <code>pub struct Damage(pub f32)</code>, as all of these are trivial types.</li>
+<li>Allow changing <code>game_config_mut().target_framerate</code> during gameplay. Previously this was only possible
+at initialization, but Comfy will now update its frame timer at the end of each frame, allowing this
+to be configurable at will.</li>
+<li>Added <code>max_distance</code> to <code>Particle</code> allowing particles to only travel a set maximum distance.</li>
+<li>Added <code>spawn_particle_fan_ex</code> with more flexible parameters for max particle distance.</li>
+<li>Upgraded <code>wgpu: 0.18 -&gt; 0.19.3, winit: 0.28 -&gt; 0.29, egui: 0.24 -&gt; 0.26</code>.</li>
+<li>Made <code>wgpu::PowerPreference</code> configurable &amp; default to <code>None</code>, with the hope of fixing a potential
+issue where users have their dedicated GPU disabled on a dual GPU setup.</li>
+<li>Added option to override <code>max_texture_dimension_2d</code> in <code>GameConfig</code>, this is useful for games that want to support
+resolutions higher than 4K. It's not entirely clear to me whether we can safely just raise this and still work
+on all machines, hence why it becomes an optional override. We're doing some more testing on this in our
+game, and if it'll be safe we'll also change the default.</li>
+<li>Added <code>mouse_input_this_frame()</code> and <code>mouse_moved_this_frame()</code> for determining whether the mouse had any input
+in the current frame, or whether it was moved. This can be useful for switching between mouse and gamepad input.</li>
+</ul>
+ </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+</body>
+</html>

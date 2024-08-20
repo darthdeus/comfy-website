@@ -98,7 +98,7 @@
     <section class="section">
       <div class="container">
 <h1 class="title">text</h1>
-<p class="subtitle"><strong>2023-12-08</strong></p>
+<p class="subtitle"><strong>2024-08-20</strong></p>
 <pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">use </span><span>comfy::*;
 </span><span>
 </span><span>simple_game!(&quot;</span><span style="color:#a3be8c;">Text Example</span><span>&quot;, GameState, setup, update);
@@ -110,11 +110,6 @@
 </span><span>
 </span><span style="color:#b48ead;">impl </span><span>GameState {
 </span><span>    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">new</span><span>(</span><span style="color:#bf616a;">_c</span><span>: &amp;</span><span style="color:#b48ead;">mut</span><span> EngineState) -&gt; </span><span style="color:#b48ead;">Self </span><span>{
-</span><span>        </span><span style="color:#65737e;">// let font_data =
-</span><span>        </span><span style="color:#65737e;">//     include_bytes!(&quot;../assets/ArianaVioleta.ttf&quot;) as &amp;[u8];
-</span><span>        </span><span style="color:#65737e;">// let font_data =
-</span><span>        </span><span style="color:#65737e;">//     include_bytes!(&quot;../../assets/ThaleahFat_TTF.ttf&quot;) as &amp;[u8];
-</span><span>
 </span><span>        </span><span style="color:#b48ead;">Self </span><span>{
 </span><span>            fonts: vec![
 </span><span>                </span><span style="color:#96b5b4;">load_font_from_bytes</span><span>(include_bytes!(
@@ -144,7 +139,6 @@
 </span><span>
 </span><span>    </span><span style="color:#96b5b4;">draw_text_pro_experimental</span><span>(
 </span><span>        </span><span style="color:#96b5b4;">simple_styled_text</span><span>(&quot;</span><span style="color:#a3be8c;">comfy has *c*o*m*f*y *t*e*x*t rendering</span><span>&quot;),
-</span><span>        </span><span style="color:#65737e;">// mouse_world(),
 </span><span>        </span><span style="color:#96b5b4;">vec2</span><span>(</span><span style="color:#d08770;">0.0</span><span>, </span><span style="color:#d08770;">1.0</span><span>),
 </span><span>        </span><span style="color:#d08770;">WHITE</span><span>,
 </span><span>        TextAlign::Center,
@@ -154,7 +148,35 @@
 </span><span>        } </span><span style="color:#b48ead;">else </span><span>{
 </span><span>            state.fonts[</span><span style="color:#d08770;">1</span><span>]
 </span><span>        },
+</span><span>        </span><span style="color:#d08770;">100</span><span>,
 </span><span>    );
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">let</span><span> alignments = [
+</span><span>        TextAlign::TopLeft,
+</span><span>        TextAlign::TopRight,
+</span><span>        TextAlign::Center,
+</span><span>        TextAlign::BottomLeft,
+</span><span>        TextAlign::BottomRight,
+</span><span>    ];
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">for </span><span>(i, align) in alignments.</span><span style="color:#96b5b4;">into_iter</span><span>().</span><span style="color:#96b5b4;">enumerate</span><span>() {
+</span><span>        </span><span style="color:#b48ead;">let</span><span> pos = </span><span style="color:#96b5b4;">vec2</span><span>(-</span><span style="color:#d08770;">10.0</span><span>, -</span><span style="color:#d08770;">2.5 </span><span>+ i as </span><span style="color:#b48ead;">f32</span><span>);
+</span><span>
+</span><span>        </span><span style="color:#96b5b4;">draw_circle</span><span>(pos, </span><span style="color:#d08770;">0.2</span><span>, </span><span style="color:#d08770;">BLACK</span><span>, </span><span style="color:#d08770;">0</span><span>);
+</span><span>        </span><span style="color:#96b5b4;">draw_circle</span><span>(pos, </span><span style="color:#d08770;">0.1</span><span>, </span><span style="color:#d08770;">RED</span><span>, </span><span style="color:#d08770;">0</span><span>);
+</span><span>
+</span><span>        </span><span style="color:#96b5b4;">draw_rect_outline</span><span>(pos, </span><span style="color:#96b5b4;">vec2</span><span>(</span><span style="color:#d08770;">5.0</span><span>, </span><span style="color:#d08770;">1.0</span><span>), </span><span style="color:#d08770;">0.1</span><span>, </span><span style="color:#d08770;">RED</span><span>, </span><span style="color:#d08770;">0</span><span>);
+</span><span>
+</span><span>        </span><span style="color:#96b5b4;">draw_text_pro_experimental</span><span>(
+</span><span>            </span><span style="color:#96b5b4;">simple_styled_text</span><span>(&amp;format!(&quot;</span><span style="color:#d08770;">{:?}</span><span>&quot;, align)),
+</span><span>            pos,
+</span><span>            </span><span style="color:#d08770;">WHITE</span><span>,
+</span><span>            align,
+</span><span>            state.font_size,
+</span><span>            state.fonts[</span><span style="color:#d08770;">0</span><span>],
+</span><span>            </span><span style="color:#d08770;">100</span><span>,
+</span><span>        );
+</span><span>    }
 </span><span>
 </span><span>    </span><span style="color:#96b5b4;">draw_text_ex</span><span>(
 </span><span>        &quot;</span><span style="color:#a3be8c;">with both builtin TTF rasterizer and with egui</span><span>&quot;,
